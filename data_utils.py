@@ -7,6 +7,7 @@ from glob import glob
 def get_file_url_list(url, file_format="png"):
     path = os.path.join(url, "*" + file_format)
     file_list = glob(path)
+
     return file_list
 
 
