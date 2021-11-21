@@ -6,6 +6,9 @@ val_subsplits = 5
 BUFFER_SIZE = 500
 BATCH_SIZE = 32
 
+filters = 32
+classes = 23
+
 
 images_source_url = "data/carla/images"
 masks_source_url = "data/carla/masks"
@@ -18,7 +21,7 @@ train_dataset = dataset.cache().shuffle(BUFFER_SIZE).batch(BATCH_SIZE)
 
 
 input_size = ([32, 96, 128, 3])
-unet = UNet(32, 1)
+unet = UNet(filters, classes)
 unet.build(input_size)
 unet.summary()
 unet.compile(optimizer='adam',
