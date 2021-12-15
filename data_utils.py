@@ -33,13 +33,19 @@ def get_dataset_files(images_source_url, masks_source_url, validation_split):
     return train_dataset_files, test_dataset_files
 
 
-def get_dataset(images_source_url, masks_source_url,  validation_split=0.2):
-    train_dataset_files, test_dataset_files = get_dataset_files(images_source_url, masks_source_url, validation_split)
+def get_dataset(images_source_url, masks_source_url, validation_split=0.2, batch_size=32):
+    train_dataset_files, val_dataset_files = get_dataset_files(images_source_url, masks_source_url, validation_split)
 
     train_dataset = train_dataset_files.map(read_file)
     train_dataset = train_dataset.map(resize)
 
-    test_dataset = test_dataset_files.map(read_file)
-    test_dataset = test_dataset.map(resize)
+    val_dataset = val_dataset_files.map(read_file)
+    val_dataset = val_dataset.map(resize)
 
-    return train_dataset, test_dataset
+    train_dataset.batch(batch_size)
+    val_dataset.batch(batch_size)
+
+    train_dataset = train_dataset.cache().batch(batch_size)
+    val_dataset = val_dataset.cache().batch(batch_size)
+
+    return train_dataset, val_dataset
