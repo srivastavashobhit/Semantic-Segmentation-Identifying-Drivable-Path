@@ -1,5 +1,6 @@
-from data_utils import *
-from model_utils import *
+from utils.data_utils import *
+from utils.model_utils import *
+from utils.values_utils import IMAGES_SRC, MASKS_SRC, VAL_SPLIT, BATCH_SIZE, EPOCHS
 
 
 def train_new_model(images_src=IMAGES_SRC, masks_src=MASKS_SRC, val_split=VAL_SPLIT, batch_size=BATCH_SIZE,

@@ -7,7 +7,7 @@ from tensorflow.python.ops.numpy_ops import np_config
 from data_utils import get_inference_dataset
 from file_utils import create_directory
 from image_utils import read_image, resize_image, get_image_from_array
-from train import train_new_model, train_from_ckpt
+from src.train import train_new_model, train_from_ckpt
 from model_utils import get_model_from_checkpoint, generate_prediction, INF_INPUT_SIZE
 from display_utils import display_inference, create_mask, create_mask_one
 
