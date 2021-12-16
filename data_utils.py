@@ -54,26 +54,26 @@ def get_train_dataset(images_source_url, masks_source_url, validation_split=0.2,
     val_dataset = val_dataset.cache().batch(batch_size)
 
     return train_dataset, val_dataset
-#
-#
-# def get_inference_dataset_files(images_source_url):
-#     images_list = get_file_url_list(images_source_url)
-#
-#     images_list = tf.constant(images_list)
-#
-#     inference_dataset_files = tf.data.Dataset.from_tensor_slices(images_list)
-#
-#     return inference_dataset_files
-#
-#
-# def get_inference_dataset(images_source_url, batch_size=32):
-#     inference_files = get_inference_dataset_files(images_source_url)
-#
-#     inference_dataset = inference_files.map(read_image_mask)
-#     inference_dataset = inference_dataset.map(resize_image_mask)
-#
-#     inference_dataset.batch(batch_size)
-#
-#     inference_dataset = inference_dataset.cache().batch(batch_size)
-#
-#     return inference_dataset
+
+
+def get_inference_dataset_files(images_source_url):
+    images_list = get_file_url_list(images_source_url)
+
+    images_list = tf.constant(images_list)
+
+    inference_dataset_files = tf.data.Dataset.from_tensor_slices(images_list)
+
+    return inference_dataset_files
+
+
+def get_inference_dataset(images_source_url, batch_size=32):
+    inference_files = get_inference_dataset_files(images_source_url)
+
+    inference_dataset = inference_files.map(read_image)
+    inference_dataset = inference_dataset.map(resize_image)
+
+    inference_dataset.batch(batch_size)
+
+    inference_dataset = inference_dataset.cache().batch(batch_size)
+
+    return inference_dataset

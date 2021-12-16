@@ -1,7 +1,11 @@
 import os
 import argparse
 
+import numpy as np
+from PIL import Image
 from tensorflow.python.ops.numpy_ops import np_config
+
+from data_utils import get_inference_dataset
 from file_utils import create_directory
 from image_utils import read_image, resize_image, get_image_from_array
 from train import train_new_model
@@ -24,16 +28,22 @@ if __name__ == "__main__":
         model = get_model_from_checkpoint()
         if args.multiple:
             pass
-            # assert args.source_folder is not None
-            # inference_dataset = get_inference_dataset(args.source_folder, batch_size=32)
-            # destination_path = create_directory(args.source_folder)
-            # name_counter = 0
-            # for input_tensor in inference_dataset:
-            #     predicted_tensor = model.predict(input_tensor)
-            #     prediction_image = get_image_from_array(predicted_tensor)
-            #     input_image = get_image_from_array(input_tensor[0])
-            #     input_image.save(os.path.join(destination_path, str(name_counter) + "_input.png"))
-            #     prediction_image.save(os.path.join(destination_path, str(name_counter) + "_output.png"))
+            assert args.source_folder is not None
+            inference_dataset = get_inference_dataset(args.source_folder, batch_size=32)
+            predictions = generate_prediction(model, inference_dataset)
+
+            for input_tensor, prediction_tensor in zip(inference_dataset, predictions):
+                print("NACHO")
+                # print("type(input_tensor)", type(input_tensor))
+                # #predicted_tensor = model.predict(input_tensor)
+                # predicted_tensor = generate_prediction(model, input_tensor)
+                # print("type(predicted_tensor)", type(predicted_tensor))
+                # print("predicted_tensor.shape", predicted_tensor.shape)
+                # prediction_image = get_image_from_array(predicted_tensor)
+                #
+                # input_image = get_image_from_array(input_tensor[0])
+                # input_image.save(os.path.join(destination_path, str(name_counter) + "_input.png"))
+                # prediction_image.save(os.path.join(destination_path, str(name_counter) + "_output.png"))
 
         else:
             assert args.image_url is not None
