@@ -15,11 +15,11 @@ INF_INPUT_SIZE = (1, 96, 128, 3)
 
 "Callbacks Inputs"
 CKPT_DIR = './saved_model_Dec16/'
-LAST_CKPT_DIR = '../saved_model/'
-TENSORBOARD_LOG_DIR = "../logs_Dec16"
+LAST_CKPT_DIR = '../../saved_model_dir/saved_model/'
+TENSORBOARD_LOG_DIR = "../../tensorboard_logs_dir/logs_Dec16"
 LOGGER_DIR = 'training_Dec16.log'
 SAVE_WEIGHTS_ONLY = False
 
 "Data Inputs"
-IMAGES_SRC = "../data/carla/images"
-MASKS_SRC = "../data/carla/masks"
+IMAGES_SRC = "../../data/carla/images"
+MASKS_SRC = "../../data/carla/masks"
