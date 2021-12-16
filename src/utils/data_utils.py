@@ -1,4 +1,4 @@
-from image_utils import *
+from utils.image_utils import *
 
 import os
 import tensorflow as tf

@@ -1,9 +1,9 @@
 import tensorflow as tf
 from tensorflow.python.keras.callbacks import CSVLogger
 
-from src.model import UNet
-from values_utils import CKPT_DIR, SAVE_WEIGHTS_ONLY, LOGGER_DIR, TENSORBOARD_LOG_DIR, CLASSES, FILTERS, INPUT_SIZE, \
-    LAST_CKPT_DIR
+from model import UNet
+from utils.values_utils import CKPT_DIR, SAVE_WEIGHTS_ONLY, LOGGER_DIR, TENSORBOARD_LOG_DIR, CLASSES, FILTERS, \
+    INPUT_SIZE, LAST_CKPT_DIR
 
 
 def get_callbacks(ckpt_dir=CKPT_DIR, save_weights_only=SAVE_WEIGHTS_ONLY, logger_dir=LOGGER_DIR,
