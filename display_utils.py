@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
+from image_utils import get_image_from_array
+
 
 def display(display_list):
     plt.figure(figsize=(15, 15))
@@ -29,7 +31,7 @@ def display_inference(display_list):
     for i in range(len(display_list)):
         plt.subplot(1, len(display_list), i+1)
         plt.title(title[i])
-        plt.imshow(tf.keras.preprocessing.image.array_to_img(display_list[i]))
+        plt.imshow(display_list[i])
         plt.axis('off')
     plt.show()
 
