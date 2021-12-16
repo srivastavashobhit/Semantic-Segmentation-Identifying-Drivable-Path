@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
-from image_utils import get_image_from_array
-
 
 def display(display_list):
     plt.figure(figsize=(15, 15))
@@ -17,10 +15,16 @@ def display(display_list):
     plt.show()
 
 
-def create_mask(predicted_mask):
+def create_mask_one(predicted_mask):
     predicted_mask = tf.argmax(predicted_mask, axis=-1)
     predicted_mask = predicted_mask[..., tf.newaxis]
     return predicted_mask[0]
+
+
+def create_mask(predicted_mask):
+    predicted_mask = tf.argmax(predicted_mask, axis=-1)
+    predicted_mask = predicted_mask[..., tf.newaxis]
+    return predicted_mask
 
 
 def display_inference(display_list):
@@ -34,5 +38,3 @@ def display_inference(display_list):
         plt.imshow(display_list[i])
         plt.axis('off')
     plt.show()
-
-

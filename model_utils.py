@@ -1,7 +1,6 @@
 import tensorflow as tf
 from tensorflow.python.keras.callbacks import CSVLogger
 
-from display_utils import create_mask
 from model import UNet
 
 EPOCHS = 40
@@ -15,15 +14,17 @@ CLASSES = 23
 INPUT_SIZE = ([32, 96, 128, 3])
 INF_INPUT_SIZE = (1, 96, 128, 3)
 
-CKPT_DIR = './saved_model/'
-TENSORBOARD_LOG_DIR = "logs"
-LOGGER_DIR = 'training.log'
+CKPT_DIR = './saved_model_Dec16/'
+LAST_CKPT_DIR = './saved_model/'
+TENSORBOARD_LOG_DIR = "logs_Dec16"
+LOGGER_DIR = 'training_Dec16.log'
 SAVE_WEIGHTS_ONLY = False
 
 
-def get_callbacks():
-    checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath=CKPT_DIR,
-                                                    save_weights_only=SAVE_WEIGHTS_ONLY,
+def get_callbacks(ckpt_dir=CKPT_DIR, save_weights_only=SAVE_WEIGHTS_ONLY, logger_dir=LOGGER_DIR,
+                  tensorboard_dir=TENSORBOARD_LOG_DIR):
+    checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath=ckpt_dir,
+                                                    save_weights_only=save_weights_only,
                                                     monitor='val_accuracy',
                                                     mode='max',
                                                     save_best_only=True)
@@ -32,9 +33,9 @@ def get_callbacks():
                                                      patience=3)
     early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_accuracy',
                                                       patience=3)
-    tensorboard = tf.keras.callbacks.TensorBoard(log_dir=LOGGER_DIR)
+    tensorboard = tf.keras.callbacks.TensorBoard(log_dir=tensorboard_dir)
 
-    csv_logger = CSVLogger(LOGGER_DIR)
+    csv_logger = CSVLogger(logger_dir)
 
     callbacks = [checkpoint, reduce_lr, early_stopping, tensorboard, csv_logger]
 
@@ -43,11 +44,11 @@ def get_callbacks():
 
 def get_model_from_checkpoint():
     model = UNet(FILTERS, CLASSES, INPUT_SIZE)
-    latest = tf.train.latest_checkpoint(CKPT_DIR)
+    latest = tf.train.latest_checkpoint(LAST_CKPT_DIR)
     model.load_weights(latest)
     return model
 
 
 def generate_prediction(model, input_image):
     prediction = model.predict(input_image)
-    return create_mask(prediction)
+    return prediction
