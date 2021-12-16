@@ -2,13 +2,29 @@ import tensorflow as tf
 
 
 class UNet(tf.keras.Model):
-
+    """
+    Skip Connection to add encoder output to corresponding decoder input at same depth level.
+    Similar to Copy and Crop from the original U-Net architecture.
+    """
     @staticmethod
     def skip_connection(input1, input2):
         return tf.keras.layers.concatenate(
             inputs=[input1, input2],
             axis=3
         )
+
+    """
+    U-Net inspired architecture, with 4 encoder blocks, 1 bottle neck layer and 4 decoder block
+    Each encoder block learn features and squeeze the input on height and width dimension, 
+    while increasing the depth. 
+   
+    Bottom neck layer simple apply two convolution operation and gives input to first decoder block.
+    
+    Decoder blocks uses transpose convolution layer to upsample the input, taking input from previous 
+    transpose convolution layer and output of corresponding encoder block which gives spatial information 
+    about the image. Output layer has #classes each corresponding to a output class.
+
+    """
 
     def __init__(self, filters, classes, input_size):
         super(UNet, self).__init__()
@@ -57,11 +73,13 @@ class UNet(tf.keras.Model):
             self.output_block_0_output, = self.output_block(classes=classes)
 
         self.build(input_size)
-        self.summary()
         self.compile(optimizer='adam',
                      loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                      metrics=['accuracy'])
 
+    """
+    Encoder block function
+    """
     def encoder_block(self, block_depth, dropout_rate, kernel_size=3):
         filters = self.filters * (2 ** block_depth)
 
@@ -90,6 +108,9 @@ class UNet(tf.keras.Model):
 
         return conv1, conv2, maxpool1, dropout1
 
+    """
+    Bottle Neck block
+    """
     def bottle_neck_block(self, block_depth, kernel_size=3):
         filters = self.filters * (2 ** block_depth)
 
@@ -111,6 +132,9 @@ class UNet(tf.keras.Model):
 
         return conv1, conv2
 
+    """
+    Decoder block function
+    """
     def decoder_block(self, block_depth, kernel_size=3):
         filters = self.filters * (2 ** block_depth)
         upconv = tf.keras.layers.Conv2DTranspose(
@@ -136,6 +160,9 @@ class UNet(tf.keras.Model):
 
         return upconv, conv1, conv2
 
+    """
+    Output block function
+    """
     def output_block(self, classes=1, kernel_size=3):
         filters = self.filters
 

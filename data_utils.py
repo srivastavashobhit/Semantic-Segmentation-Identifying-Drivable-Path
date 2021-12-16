@@ -1,3 +1,4 @@
+
 from image_utils import *
 
 import os
@@ -5,6 +6,9 @@ import tensorflow as tf
 
 from glob import glob
 from sklearn.model_selection import train_test_split
+
+IMAGES_SRC = "data/carla/images"
+MASKS_SRC = "data/carla/masks"
 
 
 def get_file_url_list(url, file_format="png"):
@@ -14,7 +18,7 @@ def get_file_url_list(url, file_format="png"):
     return file_list
 
 
-def get_dataset_files(images_source_url, masks_source_url, validation_split):
+def get_train_dataset_files(images_source_url, masks_source_url, validation_split):
     images_list = get_file_url_list(images_source_url)
     mask_list = get_file_url_list(masks_source_url)
 
@@ -33,14 +37,15 @@ def get_dataset_files(images_source_url, masks_source_url, validation_split):
     return train_dataset_files, test_dataset_files
 
 
-def get_dataset(images_source_url, masks_source_url, validation_split=0.2, batch_size=32):
-    train_dataset_files, val_dataset_files = get_dataset_files(images_source_url, masks_source_url, validation_split)
+def get_train_dataset(images_source_url, masks_source_url, validation_split=0.2, batch_size=32):
+    train_dataset_files, val_dataset_files = get_train_dataset_files(images_source_url, masks_source_url,
+                                                                     validation_split)
 
-    train_dataset = train_dataset_files.map(read_file)
-    train_dataset = train_dataset.map(resize)
+    train_dataset = train_dataset_files.map(read_image_mask)
+    train_dataset = train_dataset.map(resize_image_mask)
 
-    val_dataset = val_dataset_files.map(read_file)
-    val_dataset = val_dataset.map(resize)
+    val_dataset = val_dataset_files.map(read_image_mask)
+    val_dataset = val_dataset.map(resize_image_mask)
 
     train_dataset.batch(batch_size)
     val_dataset.batch(batch_size)
@@ -49,3 +54,26 @@ def get_dataset(images_source_url, masks_source_url, validation_split=0.2, batch
     val_dataset = val_dataset.cache().batch(batch_size)
 
     return train_dataset, val_dataset
+
+
+def get_inference_dataset_files(images_source_url):
+    images_list = get_file_url_list(images_source_url)
+
+    images_list = tf.constant(images_list)
+
+    inference_dataset_files = tf.data.Dataset.from_tensor_slices(images_list)
+
+    return inference_dataset_files
+
+
+def get_inference_dataset(images_source_url, batch_size=32):
+    inference_files = get_inference_dataset_files(images_source_url)
+
+    inference_dataset = inference_files.map(read_image_mask)
+    inference_dataset = inference_dataset.map(resize_image_mask)
+
+    inference_dataset.batch(batch_size)
+
+    inference_dataset = inference_dataset.cache().batch(batch_size)
+
+    return inference_dataset
