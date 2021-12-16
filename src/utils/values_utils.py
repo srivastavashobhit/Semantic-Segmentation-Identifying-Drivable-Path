@@ -14,10 +14,12 @@ INPUT_SIZE = ([32, 96, 128, 3])
 INF_INPUT_SIZE = (1, 96, 128, 3)
 
 "Callbacks Inputs"
-CKPT_DIR = './saved_model_Dec16/'
-LAST_CKPT_DIR = '../../saved_model_dir/saved_model/'
-TENSORBOARD_LOG_DIR = "../../tensorboard_logs_dir/logs_Dec16"
-LOGGER_DIR = 'training_Dec16.log'
+# To run a test, just put any value in the TEST_PHASE (see example below) to avoid any changes in main folder.
+TEST_PHASE = ""  # TEST_PHASE = "DEC162021"
+CKPT_DIR = "./saved_model/"+TEST_PHASE
+LAST_CKPT_DIR = "../../saved_model_dir/saved_model"+TEST_PHASE
+TENSORBOARD_LOG_DIR = "../../tensorboard_logs_dir/logs"+TEST_PHASE
+LOGGER_DIR = "csv_logger_dir/training"+TEST_PHASE+".log"
 SAVE_WEIGHTS_ONLY = False
 
 "Data Inputs"
