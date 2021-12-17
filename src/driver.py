@@ -21,6 +21,7 @@ if __name__ == "__main__":
     parser.add_argument('-i', '--image_url', type=str, help="Provide a Image URL.")
     parser.add_argument('-d', '--display', type=bool, help="Display the prediction.")
     parser.add_argument('-s', '--save', type=bool, help="Save the prediction.")
+    parser.add_argument('-e', '--extension', type=str, help="Image Extension.")
     args = parser.parse_args()
 
     if args.task == "training":
@@ -32,25 +33,27 @@ if __name__ == "__main__":
         model = get_model_from_checkpoint()
         if args.multiple:
             assert args.source_folder is not None
+            assert args.extension is not None
             destination_path = create_directory(args.source_folder)
-            names = [os.path.basename(x) for x in glob.glob(os.path.join(args.source_folder, "*.png"))]
+            names = [os.path.basename(x) for x in glob.glob(os.path.join(args.source_folder, "*."+args.extension))]
             inference_dataset = get_inference_dataset(args.source_folder, batch_size=32)
             predicted_tensors = create_mask(generate_prediction(model, inference_dataset))
             c = 0
             for predicted_tensor in predicted_tensors:
                 prediction_image = get_image_from_array(predicted_tensor)
-                prediction_image.save(os.path.join(destination_path, str(names[c]) + "_output.png"))
+                prediction_image.save(os.path.join(destination_path, str(names[c]) + "_output."+args.extension))
                 c += 1
         else:
             assert args.image_url is not None
+            assert args.extension is not None
             np_config.enable_numpy_behavior()
             input_tensor = resize_image(read_image(args.image_url)).reshape(INF_INPUT_SIZE)
             predicted_tensor = create_mask_one(generate_prediction(model, input_tensor))
             prediction_image = get_image_from_array(predicted_tensor)
             input_image = get_image_from_array(input_tensor[0])
             if args.save:
-                destination_path = create_directory("./data/carla/test/")
-                input_image.save(os.path.join(destination_path, "input.png"))
-                prediction_image.save(os.path.join(destination_path, "output.png"))
+                destination_path = create_directory("./data/test/")
+                input_image.save(os.path.join(destination_path, "input."+args.extension))
+                prediction_image.save(os.path.join(destination_path, "output."+args.extension))
             if args.display:
                 display_inference([input_image, prediction_image])
