@@ -47,7 +47,7 @@ Test  91% IoU
 `python .\src\driver.py  -t inference -m True -f .\data\carla\test\test_1\ -e png`
 
 ##### Inference single image
-`python .\src\driver.py -t inference -i .\data\carla\test\test_1\7.png -d True -s True`
+`python .\src\driver.py -t inference -i .\data\carla\test\test_1\7.png -d True -s True -e png`
 
 
 
