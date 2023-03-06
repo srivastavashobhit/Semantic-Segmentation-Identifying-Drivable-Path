@@ -29,7 +29,7 @@ Below is the exact model architecture
 ### Data set 
 The whole model is trained on CARLA self-driving car dataset with 1060 images and mask.
 
-### Training and Test Results
+### Training and Test Accuracy
 Training: 97% IoI
 Test  91% IoU
 
