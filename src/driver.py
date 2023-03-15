@@ -26,11 +26,13 @@ if __name__ == "__main__":
 
     if args.task == "training":
         if args.new:
-            train_new_model().history("accuracy")
+            train_new_model() #.history("accuracy")
         else:
-            train_from_ckpt().history("accuracy")
+            train_from_ckpt() #.history("accuracy")
+
     elif args.task == "inference":
         model = get_model_from_checkpoint()
+        
         if args.multiple:
             assert args.source_folder is not None
             assert args.extension is not None
@@ -57,3 +59,4 @@ if __name__ == "__main__":
                 prediction_image.save(os.path.join(destination_path, "output."+args.extension))
             if args.display:
                 display_inference([input_image, prediction_image])
+
